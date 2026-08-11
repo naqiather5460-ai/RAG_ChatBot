@@ -51,4 +51,11 @@ Chatbot/
 
 ## Status
 
-🚧 Under active development. Currently implemented: document ingestion, chunking, embedding, vector storage, and retrieval. Conversational QA with the LLM is in progress.
+✅ Fully functional. All core components implemented and tested:
+- Document ingestion (PDF, DOCX, TXT, Excel) — verified with real files of each format
+- Chunking, embedding, and vector storage in ChromaDB
+- Semantic retrieval pipeline
+- Prompt engineering with grounded, hallucination-resistant responses
+- Conversational question answering with multi-turn memory
+
+Run `python main.py` to start chatting interactively.

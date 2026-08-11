@@ -7,5 +7,7 @@ chromadb
 sentence-transformers
 pypdf
 python-docx
+docx2txt
 openpyxl
+pandas
 python-dotenv

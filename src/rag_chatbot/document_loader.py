@@ -1,10 +1,28 @@
 from pathlib import Path
+import pandas as pd
+from langchain_core.documents import Document
 from langchain_community.document_loaders import (
     PyPDFLoader,
     Docx2txtLoader,
     TextLoader,
-    UnstructuredExcelLoader,
 )
+
+
+def load_excel_document(file_path: Path):
+    """
+    Loads an Excel file using pandas and converts it into a LangChain Document.
+    Avoids the heavy 'unstructured' dependency required by LangChain's built-in
+    Excel loader -- pandas is simpler, faster, and already a project dependency.
+    """
+    df = pd.read_excel(file_path)
+    text_content = df.to_string(index=False)
+
+    document = Document(
+        page_content=text_content,
+        metadata={"source": str(file_path)},
+    )
+    return [document]
+
 
 def load_document(file_path: Path):
     """
@@ -20,11 +38,12 @@ def load_document(file_path: Path):
     elif extension == ".txt":
         loader = TextLoader(str(file_path), encoding="utf-8")
     elif extension in (".xlsx", ".xls"):
-        loader = UnstructuredExcelLoader(str(file_path))
+        return load_excel_document(file_path)
     else:
         raise ValueError(f"Unsupported file type: {extension}")
 
     return loader.load()
+
 
 def load_all_documents(documents_dir: Path):
     """
@@ -44,4 +63,3 @@ def load_all_documents(documents_dir: Path):
 
     print(f"[DocumentLoader] Loaded {len(all_documents)} document sections total.")
     return all_documents
-
