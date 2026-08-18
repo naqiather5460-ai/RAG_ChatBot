@@ -16,5 +16,5 @@ CHROMA_DB_DIR = PROJECT_ROOT / "chroma_db"
 CHUNK_SIZE = 1000
 CHUNK_OVERLAP = 200
 EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
-LLM_MODEL_NAME = "llama-3.1-8b-instant"
+LLM_MODEL_NAME = "openai/gpt-oss-20b"
 RETRIEVAL_TOP_K = 4
