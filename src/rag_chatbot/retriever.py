@@ -1,35 +1,21 @@
 """
 Retriever module.
-Given a question, searches ChromaDB for the most relevant document chunks.
+Given a question, searches the vector store for the most relevant document chunks.
 """
 
+from langchain_core.documents import Document
 from langchain_chroma import Chroma
 
-from src.rag_chatbot.vector_store import get_embedding_model
-from src.rag_chatbot.config import CHROMA_DB_DIR, RETRIEVAL_TOP_K
 
+class Retriever:
+    """Performs semantic similarity search against a Chroma vector store."""
 
-def load_vector_store():
-    """
-    Loads the existing ChromaDB vector store from disk (doesn't rebuild it --
-    just reconnects to what's already there).
-    """
-    embeddings = get_embedding_model()
-    vector_store = Chroma(
-        persist_directory=str(CHROMA_DB_DIR),
-        embedding_function=embeddings,
-    )
-    return vector_store
+    def __init__(self, vector_store: Chroma, top_k: int):
+        self.vector_store = vector_store
+        self.top_k = top_k
 
-
-def retrieve_relevant_chunks(query: str, vector_store=None):
-    """
-    Given a question, returns the top K most relevant chunks from ChromaDB.
-    """
-    if vector_store is None:
-        vector_store = load_vector_store()
-
-    results = vector_store.similarity_search(query, k=RETRIEVAL_TOP_K)
-
-    print(f"[Retriever] Found {len(results)} relevant chunks for query: '{query}'")
-    return results
+    def retrieve_relevant_chunks(self, query: str) -> list[Document]:
+        """Given a question, returns the top-k most relevant chunks from the vector store."""
+        results = self.vector_store.similarity_search(query, k=self.top_k)
+        print(f"[Retriever] Found {len(results)} relevant chunks for query: '{query}'")
+        return results
